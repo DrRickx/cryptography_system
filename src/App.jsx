@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import { Routes, Route, Link } from "react-router-dom";
 import Atbash from "./pages/atbash";
 import Caesar from "./pages/caesar";
@@ -18,8 +17,6 @@ function Home() {
 }
 
 function App() {
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-
   return (
     <div>
       <nav className="p-4 flex gap-4 flex-wrap items-center bg-gray-100">
