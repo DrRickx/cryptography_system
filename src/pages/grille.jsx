@@ -44,28 +44,40 @@ export default function GrilleCipher() {
   };
 
   return (
-    <div className="space-y-4 p-4 max-w-md">
-      <h2 className="text-xl font-bold">Grille Cipher</h2>
-
-      <textarea
-        className="w-full p-2 border"
-        rows={3}
-        placeholder="Enter message"
-        value={message}
-        onChange={(e) => setMessage(e.target.value)}
-      />
+    <div className="max-w-md mx-auto p-6 bg-white rounded-xl shadow-lg space-y-6">
+      <h1 className="text-2xl font-bold text-center text-blue-700">
+        Grille Cipher
+      </h1>
 
       <div>
-        <p className="font-semibold">Grille Mask (Click to toggle):</p>
-        <div className="grid grid-cols-4 gap-1 w-48">
+        <label className="block mb-2 font-medium text-gray-700">
+          Enter Message
+        </label>
+        <textarea
+          className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-400 resize-none"
+          rows={3}
+          placeholder="Type your message here"
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+        />
+      </div>
+
+      <div>
+        <p className="font-semibold mb-2">
+          Grille Mask (Click cells to toggle):
+        </p>
+        <div className="grid grid-cols-4 gap-1 w-48 mx-auto">
           {grille.map((row, r) =>
             row.map((cell, c) => (
               <button
                 key={`${r}-${c}`}
-                className={`w-10 h-10 border rounded ${
-                  cell ? "bg-blue-500" : "bg-gray-200"
-                }`}
+                className={`w-10 h-10 border rounded transition-colors ${
+                  cell ? "bg-blue-600 text-white" : "bg-gray-200"
+                } flex items-center justify-center select-none`}
                 onClick={() => toggleCell(r, c)}
+                type="button"
+                aria-pressed={cell}
+                aria-label={`Toggle cell at row ${r + 1}, column ${c + 1}`}
               >
                 {cell ? "●" : ""}
               </button>
@@ -74,28 +86,30 @@ export default function GrilleCipher() {
         </div>
       </div>
 
-      <div className="space-x-2">
+      <div className="flex gap-4 justify-center">
         <button
           onClick={handleEncrypt}
-          className="px-4 py-2 bg-green-500 text-white rounded"
+          className="px-6 py-2 bg-green-600 text-white rounded-md font-semibold hover:bg-green-700 transition"
+          type="button"
         >
           Encrypt
         </button>
         <button
           onClick={handleDecrypt}
-          className="px-4 py-2 bg-blue-500 text-white rounded"
+          className="px-6 py-2 bg-blue-600 text-white rounded-md font-semibold hover:bg-blue-700 transition"
+          type="button"
         >
           Decrypt
         </button>
       </div>
 
       <div>
-        <p className="font-semibold">Grid Output:</p>
-        <div className="grid grid-cols-4 gap-1 w-48 border p-2">
+        <p className="font-semibold mb-2">Grid Output:</p>
+        <div className="grid grid-cols-4 gap-1 w-48 mx-auto border border-gray-300 rounded-md p-2 bg-white">
           {outputGrid.flat().map((char, i) => (
             <div
               key={i}
-              className="w-10 h-10 flex items-center justify-center border bg-white rounded"
+              className="w-10 h-10 flex items-center justify-center border border-gray-300 rounded"
             >
               {char}
             </div>
@@ -104,8 +118,10 @@ export default function GrilleCipher() {
       </div>
 
       <div>
-        <p className="font-semibold mt-4">Result Text:</p>
-        <div className="p-2 bg-gray-100 border rounded">{output}</div>
+        <p className="font-semibold mb-2">Result Text:</p>
+        <div className="p-3 bg-gray-100 border border-gray-300 rounded-md min-h-[3rem] whitespace-pre-wrap break-words">
+          {output || "Result will appear here."}
+        </div>
       </div>
     </div>
   );
