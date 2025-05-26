@@ -3,25 +3,40 @@ import {
   columnarEncrypt,
   columnarDecrypt,
 } from "../../utils/columnarTransposition_util";
+import Modal from "../../components/modal"; // Adjust path if needed
 
 export default function ColumnarTransposition() {
   const [input, setInput] = useState("");
   const [key, setKey] = useState("");
   const [output, setOutput] = useState("");
 
-  const handleEncrypt = () => {
-    if (!key.trim()) {
-      setOutput("Please enter a key.");
-      return;
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
+
+  const showModal = (msg) => {
+    setModalMessage(msg);
+    setModalOpen(true);
+  };
+
+  const validateInput = () => {
+    if (!input.trim()) {
+      showModal("Please enter a message to encrypt or decrypt.");
+      return false;
     }
+    if (!key.trim()) {
+      showModal("Please enter a key before proceeding.");
+      return false;
+    }
+    return true;
+  };
+
+  const handleEncrypt = () => {
+    if (!validateInput()) return;
     setOutput(columnarEncrypt(input, key));
   };
 
   const handleDecrypt = () => {
-    if (!key.trim()) {
-      setOutput("Please enter a key.");
-      return;
-    }
+    if (!validateInput()) return;
     setOutput(columnarDecrypt(input, key));
   };
 
@@ -76,6 +91,24 @@ export default function ColumnarTransposition() {
           </p>
         </div>
       </div>
+
+      {/* Modal validation */}
+      <Modal
+        isOpen={modalOpen}
+        onClose={() => setModalOpen(false)}
+        title="Input Validation"
+        footer={[
+          <button
+            key="close"
+            onClick={() => setModalOpen(false)}
+            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
+          >
+            Close
+          </button>,
+        ]}
+      >
+        <p className="text-gray-700">{modalMessage}</p>
+      </Modal>
     </div>
   );
 }
