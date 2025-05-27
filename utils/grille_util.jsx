@@ -12,19 +12,26 @@ export function grilleEncrypt(message, grille) {
   const padded = clean.padEnd(totalCells, "X");
 
   const grid = Array.from({ length: n }, () => Array(n).fill(""));
+
   let idx = 0;
   let mask = grille;
 
   for (let rot = 0; rot < 4; rot++) {
     for (let r = 0; r < n; r++) {
       for (let c = 0; c < n; c++) {
-        if (mask[r][c]) grid[r][c] = padded[idx++];
+        if (mask[r][c] === true) {
+          grid[r][c] = padded[idx++];
+        }
       }
     }
     mask = rotateMatrix(mask);
   }
 
-  return grid.flat().join("");
+  // Replace any remaining empty cells with 'X'
+  return grid
+    .flat()
+    .map((ch) => (ch === "" ? "X" : ch))
+    .join("");
 }
 
 export function grilleDecrypt(ciphertext, grille) {
@@ -45,11 +52,14 @@ export function grilleDecrypt(ciphertext, grille) {
   for (let rot = 0; rot < 4; rot++) {
     for (let r = 0; r < n; r++) {
       for (let c = 0; c < n; c++) {
-        if (mask[r][c]) result += grid[r][c];
+        if (mask[r][c] === true) {
+          result += grid[r][c];
+        }
       }
     }
     mask = rotateMatrix(mask);
   }
 
-  return result.replace(/X+$/g, ""); // remove trailing X's
+  // Remove trailing padding X's
+  return result.replace(/X+$/g, "");
 }
