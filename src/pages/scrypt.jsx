@@ -1,16 +1,30 @@
 import { useState } from "react";
 import { scryptHash } from "../../utils/scrypt_util";
+import Modal from "../../components/modal"; // Adjust this path if needed
 
 export default function Scrypt() {
   const [password, setPassword] = useState("");
   const [hash, setHash] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const handleHash = async () => {
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
+
+  const showModal = (msg) => {
+    setModalMessage(msg);
+    setModalOpen(true);
+  };
+
+  const validateInput = () => {
     if (!password.trim()) {
-      alert("Please enter a password");
-      return;
+      showModal("Please enter a password to generate its scrypt hash.");
+      return false;
     }
+    return true;
+  };
+
+  const handleHash = async () => {
+    if (!validateInput()) return;
 
     setLoading(true);
     const result = await scryptHash(password);
@@ -64,6 +78,24 @@ export default function Scrypt() {
           />
         </div>
       </div>
+
+      {/* Modal for input validation */}
+      <Modal
+        isOpen={modalOpen}
+        onClose={() => setModalOpen(false)}
+        title="Input Validation"
+        footer={[
+          <button
+            key="close"
+            onClick={() => setModalOpen(false)}
+            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
+          >
+            Close
+          </button>,
+        ]}
+      >
+        <p className="text-gray-700">{modalMessage}</p>
+      </Modal>
     </div>
   );
 }

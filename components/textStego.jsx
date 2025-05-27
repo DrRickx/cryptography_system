@@ -151,11 +151,16 @@ export default function TextStego() {
         </div>
       )}
 
-      {decoded && (
-        <div className="p-2 bg-yellow-100 border">
-          <strong>Decoded Message:</strong> {decoded}
-        </div>
-      )}
+      <div className="space-y-2">
+        <label className="font-medium text-gray-700">Result</label>
+        <textarea
+          value={decoded}
+          readOnly
+          rows={4}
+          className="w-full border rounded px-3 py-2 bg-gray-100 text-gray-800 resize-none"
+          placeholder="Result will appear here"
+        />
+      </div>
     </div>
   );
 }

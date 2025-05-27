@@ -1,11 +1,15 @@
 import { useState } from "react";
 import { generateLightCache, simulateEthash } from "../../utils/ethash_util";
+import Modal from "../../components/modal";
 
 export default function Ethash() {
   const [header, setHeader] = useState("abcd1234");
   const [nonce, setNonce] = useState("00000001");
   const [result, setResult] = useState("");
   const [cache, setCache] = useState([]);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
 
   const handleGenerateCache = () => {
     const newCache = generateLightCache(header);
@@ -14,7 +18,8 @@ export default function Ethash() {
 
   const handleSimulate = () => {
     if (cache.length === 0) {
-      alert("Generate cache first!");
+      setModalMessage("Generate cache first!");
+      setIsModalOpen(true);
       return;
     }
     const hash = simulateEthash(header, nonce, cache);
@@ -24,9 +29,7 @@ export default function Ethash() {
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-50 p-4">
       <div className="bg-white shadow-md rounded-2xl p-6 w-full max-w-md space-y-4 border font-mono">
-        <h1 className="text-2xl font-bold text-center">
-          Simplified Ethash Demo
-        </h1>
+        <h1 className="text-2xl font-bold text-center">Simplified Ethash</h1>
 
         <div>
           <label className="block mb-1 font-semibold">Block Header:</label>
@@ -74,15 +77,34 @@ export default function Ethash() {
           </button>
         </div>
 
-        {result && (
-          <div>
-            <label className="block mb-1 font-semibold">Resulting Hash:</label>
-            <pre className="bg-gray-100 p-2 rounded overflow-x-auto whitespace-pre-wrap break-words">
-              {result}
-            </pre>
-          </div>
-        )}
+        <div className="space-y-2">
+          <label className="font-medium text-gray-700">Result</label>
+          <textarea
+            value={result}
+            readOnly
+            rows={4}
+            className="w-full border rounded px-3 py-2 bg-gray-100 text-gray-800 resize-none"
+            placeholder="Result will appear here"
+          />
+        </div>
       </div>
+
+      {/* Modal for validation */}
+      <Modal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        title="Validation Error"
+        footer={
+          <button
+            onClick={() => setIsModalOpen(false)}
+            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
+          >
+            OK
+          </button>
+        }
+      >
+        <p>{modalMessage}</p>
+      </Modal>
     </div>
   );
 }

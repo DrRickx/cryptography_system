@@ -5,7 +5,6 @@ import { atbashEncryptDecrypt } from "../../utils/atbash_util";
 export default function Atbash() {
   const [input, setInput] = useState("");
   const [output, setOutput] = useState("");
-  const [mode, setMode] = useState("encrypt");
 
   const [modalOpen, setModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
@@ -33,34 +32,29 @@ export default function Atbash() {
           </h1>
 
           <div className="space-y-2">
-            <label className="font-medium text-gray-700">Mode</label>
-            <select
-              value={mode}
-              onChange={(e) => setMode(e.target.value)}
-              className="w-full border rounded px-3 py-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-400"
-            >
-              <option value="encrypt">Encrypt</option>
-              <option value="decrypt">Decrypt</option>
-            </select>
-          </div>
-
-          <div className="space-y-2">
             <label className="font-medium text-gray-700">Enter Text</label>
             <textarea
               value={input}
               onChange={(e) => setInput(e.target.value)}
               rows={4}
               className="w-full border rounded px-3 py-2 text-gray-800 resize-none focus:outline-none focus:ring-2 focus:ring-blue-400"
-              placeholder={`Type your message to ${mode}`}
             />
           </div>
 
-          <button
-            onClick={handleProcess}
-            className="w-full py-3 text-white bg-blue-600 rounded-lg font-semibold hover:bg-blue-700 transition duration-200"
-          >
-            {mode === "encrypt" ? "Encrypt" : "Decrypt"}
-          </button>
+          <div className="flex justify-between gap-3">
+            <button
+              onClick={handleProcess}
+              className="w-full py-3 text-white bg-blue-600 rounded-lg font-semibold cursor-pointer hover:bg-blue-700 transition duration-200"
+            >
+              Encrypt
+            </button>
+            <button
+              onClick={handleProcess}
+              className="w-full py-3 text-white bg-blue-600 rounded-lg font-semibold cursor-pointer hover:bg-blue-700 transition duration-200"
+            >
+              Decrypt
+            </button>
+          </div>
 
           <div className="space-y-2">
             <label className="font-medium text-gray-700">Result</label>

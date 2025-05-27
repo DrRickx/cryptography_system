@@ -1,15 +1,29 @@
 import { useState } from "react";
 import { lanmanHash } from "../../utils/lanman_util";
+import Modal from "../../components/modal"; // Adjust path if necessary
 
 export default function LanmanPage() {
   const [input, setInput] = useState("");
   const [hash, setHash] = useState("");
 
-  const handleHash = () => {
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
+
+  const showModal = (msg) => {
+    setModalMessage(msg);
+    setModalOpen(true);
+  };
+
+  const validateInput = () => {
     if (!input.trim()) {
-      setHash("Please enter a password.");
-      return;
+      showModal("Please enter a password to generate its LANMAN hash.");
+      return false;
     }
+    return true;
+  };
+
+  const handleHash = () => {
+    if (!validateInput()) return;
     setHash(lanmanHash(input));
   };
 
@@ -59,6 +73,24 @@ export default function LanmanPage() {
           />
         </div>
       </div>
+
+      {/* Modal Component */}
+      <Modal
+        isOpen={modalOpen}
+        onClose={() => setModalOpen(false)}
+        title="Input Validation"
+        footer={[
+          <button
+            key="close"
+            onClick={() => setModalOpen(false)}
+            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
+          >
+            Close
+          </button>,
+        ]}
+      >
+        <p className="text-gray-700">{modalMessage}</p>
+      </Modal>
     </div>
   );
 }
